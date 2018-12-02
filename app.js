@@ -6,105 +6,47 @@ const mainHeader = document.querySelector('h1')
 const resetBtn = document.querySelector('#reset')
 // const easyBtn = document.querySelector('#easy')
 // const hardBtn = document.querySelector('#hard')
-const modeBtn = document.querySelector('.mode')
+const modeBtns = document.querySelectorAll('.mode')
 
 // Set init level of difficulty
 let diffLevel = 6
+// Color Arr - arr of color in rbg format
+let colors
+// Rnd color picked from color arr
+let pickedColor
 
-// Color Arr set init state
-let colors = generateRandomColors(diffLevel)
-// [
-//   'rgb(255, 0, 0)',
-//   'rgb(255, 255, 0)',
-//   'rgb(0, 255, 0)',
-//   'rgb(0, 255, 255)',
-//   'rgb(0, 0, 255)',
-//   'rgb(255, 0, 255)'
-// ]
+// Set initial state
+reset()
 
-// Color picked (color in digits need to be guess in color)
-// const pickedColor = colors[5]
-let pickedColor = pickColor()
+// Add event listeners for each modeBtn
+modeBtns.forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    // Remove class selected from all buttons
+    modeBtns.forEach(btnTemp => {
+      btnTemp.classList.remove('selected')
+    })
 
-// Add event listener to easyBtn
-easyBtn.addEventListener('click', () => {
-  // Add/remove class selected
-  easyBtn.classList.add('selected')
-  hardBtn.classList.remove('selected')
+    // Set class selected to clicked button
+    btn.classList.add('selected')
 
-  // Set diff level
-  diffLevel = 3
+    // Set diffLevel depends on btn clicked
 
-  // Generate new color
-  colors = generateRandomColors(diffLevel)
-
-  // Picked and show new color
-  pickedColor = pickColor()
-
-  // Paint three first square to color[i] and set last three squares display=none
-  for (let i = 0; i < squares.length; i++) {
-    if (colors[i]) {
-      // Set initial colors to squares
-      squares[i].style.backgroundColor = colors[i]
+    if (btn.textContent === 'Easy') {
+      diffLevel = 3
     } else {
-      squares[i].style.display = 'none'
+      diffLevel = 6
     }
-  }
+
+    reset()
+  })
 })
 
-// Add event listener to hardBtn
-hardBtn.addEventListener('click', () => {
-  // Add/remove class selected
-  hardBtn.classList.add('selected')
-  easyBtn.classList.remove('selected')
-
-  // Set diff level
-  diffLevel = 6
-
-  // Generate new color
-  colors = generateRandomColors(diffLevel)
-
-  // Picked new color
-  pickedColor = pickColor()
-
-  // Paint squares to color[i] and set squares display=block
-  for (let i = 0; i < squares.length; i++) {
-    // Set initial colors to squares
-    squares[i].style.backgroundColor = colors[i]
-    squares[i].style.display = 'block'
-  }
-})
-
-// // show color of square picked
-// colorShow.textContent = pickedColor
-
-// Add event listener to restart
+// Add event listener to resetBtn
 resetBtn.addEventListener('click', () => {
-  // Change resetBtn text
-  resetBtn.textContent = 'New Colors'
-
-  // Empty messageShow
-  messageShow.textContent = ''
-
-  // Paint h1 to background
-  mainHeader.style.backgroundColor = 'steelblue'
-
-  // Generate new colors
-  colors = generateRandomColors(diffLevel)
-
-  // Set new colors to squares
-  for (let i = 0; i < squares.length; i++) {
-    // Set initial colors to squares
-    squares[i].style.backgroundColor = colors[i]
-  }
-
-  // Pick new color
-  pickedColor = pickColor()
-
-  // // show color of square picked
-  // colorShow.textContent = pickedColor
+  reset()
 })
 
+// Paint squares and add event listeners to each square with logic
 for (let i = 0; i < squares.length; i++) {
   // Set initial colors to squares
   squares[i].style.backgroundColor = colors[i]
@@ -112,7 +54,7 @@ for (let i = 0; i < squares.length; i++) {
   // Add event listeners to each square
   squares[i].addEventListener('click', (e) => {
     // Grab color of square picked
-    console.log(e.toElement.style.backgroundColor)
+    // console.log(e.toElement.style.backgroundColor)
     let clickedColor = e.toElement.style.backgroundColor
 
     // Check clickedColor vs pickedColor
@@ -135,11 +77,34 @@ for (let i = 0; i < squares.length; i++) {
   )
 }
 
-// function chooseSquare (e) {
-//   // console.log(e.toElement.style.backgroundColor)
-//   // Show color of square chosen
-//   colorShow.textContent = e.toElement.style.backgroundColor
-// }
+function reset () {
+  // Change resetBtn text
+  resetBtn.textContent = 'New Colors'
+
+  // Empty messageShow
+  messageShow.textContent = ''
+
+  // Paint h1 to background
+  mainHeader.style.backgroundColor = 'steelblue'
+
+  // Generate new colors
+  colors = generateRandomColors(diffLevel)
+
+  // Set new colors to squares
+  for (let i = 0; i < squares.length; i++) {
+    // Check how much colors we have. Paint that quantity of colors. The others display=none
+    if (colors[i]) {
+      // Paint squares to colors
+      squares[i].style.backgroundColor = colors[i]
+      squares[i].style.display = 'block'
+    } else {
+      squares[i].style.display = 'none'
+    }
+  }
+
+  // Pick and paint new color in the header
+  pickedColor = pickColor()
+}
 
 // Change all divs and h1 to one color
 function changeColor (color) {
@@ -153,6 +118,7 @@ function changeColor (color) {
 }
 
 // Pick color from color Arr. Color Arr length could be different
+// Paint picked color into header
 function pickColor () {
   // Pick new rnd color
   let pickedColor = colors[Math.floor(Math.random() * colors.length)]
