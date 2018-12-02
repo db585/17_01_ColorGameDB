@@ -79,7 +79,7 @@ for (let i = 0; i < squares.length; i++) {
 
 function reset () {
   // Change resetBtn text
-  resetBtn.textContent = 'New Colors'
+  resetBtn.textContent = 'New Game'
 
   // Empty messageShow
   messageShow.textContent = ''

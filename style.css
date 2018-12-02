@@ -67,11 +67,12 @@ button:hover {
   height: 1.8em;
   text-align: center;
   padding: 0;
+  font-size: 0.8em;
 }
 
 #message {
   display: inline-block;
-  width: 25%;
+  width: 30%;
   text-transform: uppercase;
   font-weight: 700;
   /* letter-spacing: 1px; */
